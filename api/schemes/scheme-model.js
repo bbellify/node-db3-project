@@ -34,6 +34,7 @@ async function findById(scheme_id) { // EXERCISE B
 
       SELECT
           sc.scheme_name,
+          sc.scheme_id,
           st.*
       FROM schemes as sc
       LEFT JOIN steps as st
@@ -56,17 +57,22 @@ async function findById(scheme_id) { // EXERCISE B
     rows.forEach(row => steps.push({
       step_id: row.step_id,
       step_number: row.step_number,
-      instructions: row.instructions
-  }))}
-
-  const result = {
-    scheme_id: rows[0].scheme_id,
-    scheme_name: rows[0].scheme_name,
-    steps: steps
-  }
-
-  return result
-
+      instructions: row.instructions 
+    }))
+    const result = {
+      scheme_id: rows[0].scheme_id,
+      scheme_name: rows[0].scheme_name,
+      steps: steps
+    }
+    return result 
+  } else {
+    const result = {
+      scheme_id: scheme_id,
+      scheme_name: rows[0].scheme_name,
+      steps: steps
+    }
+    return result
+  } 
 
   /*
     2B- When you have a grasp on the query go ahead and build it in Knex
@@ -163,15 +169,27 @@ async function findSteps(scheme_id) { // EXERCISE C
       .select('step_id', 'step_number', 'instructions', 'scheme_name')
       .where('sc.scheme_id', scheme_id)
       .orderBy('step_number')
-      
+
   return rows
 
 }
 
-function add(scheme) { // EXERCISE D
+async function add(scheme) { // EXERCISE D
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
+
+  // insert into schemes (scheme_name) values ('learn to code');
+
+  const [newId] = await db('schemes').insert(scheme)
+
+  const newScheme = await findById(newId)
+
+  console.log(newScheme)
+  return newScheme
+
+  
+
 }
 
 function addStep(scheme_id, step) { // EXERCISE E
