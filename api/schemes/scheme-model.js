@@ -185,11 +185,7 @@ async function add(scheme) { // EXERCISE D
 
   const newScheme = await findById(newId)
 
-  console.log(newScheme)
   return newScheme
-
-  
-
 }
 
 async function addStep(scheme_id, step) { // EXERCISE E
@@ -212,7 +208,6 @@ async function addStep(scheme_id, step) { // EXERCISE E
   const result = await findSteps(scheme_id)
 
   return result
-
 }
 
 module.exports = {
